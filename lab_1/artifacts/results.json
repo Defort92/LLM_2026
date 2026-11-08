@@ -1,0 +1,489 @@
+{
+  "config": {
+    "model_name": "sentence-transformers/all-MiniLM-L6-v2",
+    "seed": 42,
+    "train_per_class": 3000,
+    "validation_per_class": 1000,
+    "max_length": 128,
+    "batch_size": 32,
+    "epochs": 2,
+    "learning_rate": 2e-05,
+    "weight_decay": 0.01,
+    "warmup_ratio": 0.1,
+    "dropout": 0.1
+  },
+  "environment": {
+    "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+    "torch": "2.12.1+cu130",
+    "device": "cuda",
+    "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU"
+  },
+  "dataset": {
+    "name": "fancyzhx/ag_news",
+    "labels": [
+      "World",
+      "Sports",
+      "Business",
+      "Sci/Tech"
+    ],
+    "train_size": 12000,
+    "validation_size": 4000,
+    "test_size": 7600
+  },
+  "results": [
+    {
+      "pooling": "mean",
+      "best_validation_f1_macro": 0.9090432402125841,
+      "test_loss": 0.27773544214273754,
+      "accuracy": 0.905921052631579,
+      "precision_macro": 0.9056061795890883,
+      "recall_macro": 0.905921052631579,
+      "f1_macro": 0.9056979990646532,
+      "elapsed_seconds": 49.00140530010685,
+      "confusion_matrix": [
+        [
+          1715,
+          58,
+          82,
+          45
+        ],
+        [
+          16,
+          1865,
+          12,
+          7
+        ],
+        [
+          73,
+          13,
+          1634,
+          180
+        ],
+        [
+          58,
+          13,
+          158,
+          1671
+        ]
+      ],
+      "classification_report": {
+        "World": {
+          "precision": 0.9210526315789473,
+          "recall": 0.9026315789473685,
+          "f1-score": 0.9117490696438065,
+          "support": 1900.0
+        },
+        "Sports": {
+          "precision": 0.956900974858902,
+          "recall": 0.9815789473684211,
+          "f1-score": 0.9690828786697844,
+          "support": 1900.0
+        },
+        "Business": {
+          "precision": 0.8663838812301167,
+          "recall": 0.86,
+          "f1-score": 0.8631801373481247,
+          "support": 1900.0
+        },
+        "Sci/Tech": {
+          "precision": 0.8780872306883868,
+          "recall": 0.8794736842105263,
+          "f1-score": 0.8787799105968972,
+          "support": 1900.0
+        },
+        "accuracy": 0.905921052631579,
+        "macro avg": {
+          "precision": 0.9056061795890883,
+          "recall": 0.905921052631579,
+          "f1-score": 0.9056979990646532,
+          "support": 7600.0
+        },
+        "weighted avg": {
+          "precision": 0.9056061795890882,
+          "recall": 0.905921052631579,
+          "f1-score": 0.9056979990646531,
+          "support": 7600.0
+        }
+      },
+      "sample_errors": [
+        {
+          "text": "Card fraud unit nets 36,000 cards In its first two years, the UK's dedicated card fraud unit, has recovered 36,000 stolen cards and 171 arrests - and estimates it saved 65m.",
+          "target": "Sci/Tech",
+          "prediction": "Business"
+        },
+        {
+          "text": "Storage, servers bruise HP earnings update Earnings per share rise compared with a year ago, but company misses analysts' expectations by a long shot.",
+          "target": "Sci/Tech",
+          "prediction": "Business"
+        },
+        {
+          "text": "Rivals Try to Turn Tables on Charles Schwab By MICHAEL LIEDTKE     SAN FRANCISCO (AP) -- With its low prices and iconoclastic attitude, discount stock broker Charles Schwab Corp. (SCH) represented an annoying stone in Wall Street's wing-tipped shoes for decades...",
+          "target": "Sci/Tech",
+          "prediction": "Business"
+        },
+        {
+          "text": "Dell Exits Low-End China Consumer PC Market  HONG KONG (Reuters) - Dell Inc. &lt;DELL.O&gt;, the world's  largest PC maker, said on Monday it has left the low-end  consumer PC market in China and cut its overall growth target  for the country this year due to stiff competition in the  segment.",
+          "target": "Sci/Tech",
+          "prediction": "Business"
+        },
+        {
+          "text": "Promoting a Shared Vision As Michael Kaleko kept running into people who were getting older and having more vision problems, he realized he could do something about it.",
+          "target": "Sci/Tech",
+          "prediction": "Sports"
+        },
+        {
+          "text": "India's Tata expands regional footprint via NatSteel buyout (AFP) AFP - India's Tata Iron and Steel Company Ltd. took a strategic step to expand its Asian footprint with the announcement it will buy the Asia-Pacific steel operations of Singapore's NatSteel Ltd.",
+          "target": "World",
+          "prediction": "Business"
+        },
+        {
+          "text": "Live: Olympics day four Richard Faulds and Stephen Parry are going for gold for Great Britain on day four in Athens.",
+          "target": "World",
+          "prediction": "Sports"
+        },
+        {
+          "text": "Intel to delay product aimed for high-definition TVs SAN FRANCISCO -- In the latest of a series of product delays, Intel Corp. has postponed the launch of a video display chip it had previously planned to introduce by year end, putting off a showdown with Texas Instruments Inc. in the fast-growing market for high-definition television displays.",
+          "target": "Business",
+          "prediction": "Sci/Tech"
+        },
+        {
+          "text": "U.S. Misses Cut in Olympic 100 Free ATHENS, Greece - Top American sprinters Jason Lezak and Ian Crocker missed the cut in the Olympic 100-meter freestyle preliminaries Tuesday, a stunning blow for a country that had always done well in the event.    Pieter van den Hoogenband of the Netherlands and Australian Ian Thorpe advanced to the evening semifinal a day after dueling teenager Michael Phelps in the 200 freestyle, won by Thorpe...",
+          "target": "World",
+          "prediction": "Sports"
+        },
+        {
+          "text": "Stocks Climb on Drop in Consumer Prices NEW YORK - Stocks rose for a second straight session Tuesday as a drop in consumer prices allowed investors to put aside worries about inflation, at least for the short term.    With gasoline prices falling to eight-month lows, the Consumer Price Index registered a small drop in July, giving consumers a respite from soaring energy prices...",
+          "target": "World",
+          "prediction": "Business"
+        },
+        {
+          "text": "Yahoo! Ups Ante for Small Businesses Web giant Yahoo! is gambling that price cuts on its domain name registration and Web hosting products will make it more competitive with discounters in the space -- which means that small businesses looking to move online get a sweeter deal through ...",
+          "target": "Business",
+          "prediction": "Sci/Tech"
+        },
+        {
+          "text": "IBM Buys Two Danish Services Firms IBM said Tuesday it has acquired a pair of Danish IT services firms as part of its effort to broaden its presence in Scandinavia. As a result of the moves, IBM will add about 3,700 IT staffers to its global head count. Financial terms of ...",
+          "target": "Sci/Tech",
+          "prediction": "Business"
+        },
+        {
+          "text": "Oil prices bubble to record high The price of oil has continued its sharp rise overnight, closing at a record high. The main contract in New York, light sweet crude for delivery next month, has closed at a record \\$US46.75 a barrel - up 70 cents on yesterday #39;s close. ",
+          "target": "World",
+          "prediction": "Business"
+        },
+        {
+          "text": "SUVs: Live And Let Die NEW YORK - The newly released traffic crash fatality data have something for everyone in the debate about the safety of sport utility vehicles. ",
+          "target": "Business",
+          "prediction": "Sci/Tech"
+        },
+        {
+          "text": "Google Lowers Its IPO Price Range SAN JOSE, Calif. - In a sign that Google Inc.'s initial public offering isn't as popular as expected, the company lowered its estimated price range to between \\$85 and \\$95 per share, down from the earlier prediction of \\$108 and \\$135 per share...",
+          "target": "World",
+          "prediction": "Business"
+        },
+        {
+          "text": "Future Doctors, Crossing Borders Students at the Mount Sinai School of Medicine learn that diet and culture shape health in East Harlem.",
+          "target": "World",
+          "prediction": "Sci/Tech"
+        },
+        {
+          "text": "Ross Stores Profit Plummets 40 Percent (AP) AP - Discount retailer Ross Stores Inc. Wednesday said its profit fell about 40 percent in the latest quarter due to problems with a new computer system that limited the company's ability to respond to changes in customer demand.",
+          "target": "Business",
+          "prediction": "Sci/Tech"
+        },
+        {
+          "text": "Stock Prices Climb Ahead of Google IPO NEW YORK - Investors shrugged off rising crude futures Wednesday to capture well-priced shares, sending the Nasdaq composite index up 1.6 percent ahead of Google Inc.'s much-anticipated initial public offering of stock.    In afternoon trading, the Dow Jones industrial average gained 67.10, or 0.7 percent, to 10,039.93...",
+          "target": "World",
+          "prediction": "Business"
+        },
+        {
+          "text": "Intuit Posts Wider Loss After Charge (Reuters) Reuters - Intuit Inc. (INTU.O), maker of\\the No. 1 U.S. tax presentation software TurboTax, on Wednesday\\posted a wider quarterly loss after taking a goodwill\\impairment charge during its seasonally weaker fourth quarter.",
+          "target": "Sci/Tech",
+          "prediction": "Business"
+        },
+        {
+          "text": "Hurricane center #39;s projection on Charley not far off, data show FORT LAUDERDALE, Fla. - (KRT) - Despite criticism that it should have better anticipated Hurricane Charley #39;s rapid intensification and quick turn, the National Hurricane Center #39;s forecast wasn #39;t that far off, a preliminary post-mortem shows. ",
+          "target": "Sci/Tech",
+          "prediction": "Business"
+        },
+        {
+          "text": "Lloyds TSB cashes in on VoIP Lloyds TSB is gearing up to roll out one of the largest converged networks in Europe, a 500m 70,000 phone VoIP infrastructure linking all the bank #39;s branches and cash points.",
+          "target": "Sci/Tech",
+          "prediction": "Business"
+        },
+        {
+          "text": "Selling Houston Warts and All, Especially Warts Descriptions of urban afflictions and images of giant mosquitoes and cockroaches to convey a sense of how Houston is nevertheless beloved by many residents.",
+          "target": "Business",
+          "prediction": "World"
+        },
+        {
+          "text": "Caterpillar snaps up another remanufacturer of engines PEORIA - Caterpillar Inc. said Wednesday it will acquire a South Carolina remanufacturer of engines and automatic transmissions, increasing its US employment base by 500 people. ",
+          "target": "Sci/Tech",
+          "prediction": "Business"
+        },
+        {
+          "text": "Ciena Posts a Loss, Forecasts Flat Sales &lt;p&gt;&lt;/p&gt;&lt;p&gt; By Deborah Cohen&lt;/p&gt;&lt;p&gt; CHICAGO (Reuters) - Telecommunications equipment makerCiena Corp. &lt;CIEN.O&gt; on Thursday reported a wider loss for thefiscal third quarter due to slack demand and forecast sales inthe current quarter would be little changed from the thirdquarter.&lt;/p&gt;",
+          "target": "Sci/Tech",
+          "prediction": "Business"
+        },
+        {
+          "text": "Ecuadorean Lawsuit Vs Texaco Boils Down to Science (Reuters) Reuters - After a decade\\of court battles, lawyers on Wednesday took a lawsuit by\\Ecuadorean Indians accusing U.S. oil firm ChevronTexaco Corp..\\of polluting the Amazon jungle into the field.",
+          "target": "Sci/Tech",
+          "prediction": "Business"
+        },
+        {
+          "text": "Producer sues for Rings profits Hollywood producer Saul Zaentz sues the producers of The Lord of the Rings for \\$20m in royalties.",
+          "target": "World",
+          "prediction": "Business"
+        },
+        {
+          "text": "Don #39;t expect Tiger to relinquish his top ranking without a fight They #39;re calling Ohio a  quot;battleground state, quot; one of the two or three places likely to decide November #39;s presidential election. On local TV, the Bush and Kerry ads air so frequently that it #39;s easy to forget it #39;s Bob Costas who actually runs the country. ",
+          "target": "Sports",
+          "prediction": "World"
+        },
+        {
+          "text": "Antidepressants to Reflect Suicide Risk  WASHINGTON (Reuters) - The U.S. Food and Drug  Administration plans to update antidepressant labels to reflect  studies that suggest a link between the drugs and suicide in  youths, but remains cautious about the strength of such ties,   according to documents released on Friday.",
+          "target": "Business",
+          "prediction": "World"
+        },
+        {
+          "text": "Crude Price Spike May Send Gas Higher (AP) AP - Amid soaring crude oil prices, gasoline costs have been dropping. But don't expect that to last, economists say.",
+          "target": "World",
+          "prediction": "Business"
+        },
+        {
+          "text": "Amazon Snaps Up China's Largest Web Retailer (NewsFactor) NewsFactor - Amazon.com (Nasdaq: AMZN) has said it will buy Joyo.com Limited -- a British Virgin Islands company that operates the largest Internet retail Web site in China -- for US #36;75 million.",
+          "target": "Business",
+          "prediction": "Sci/Tech"
+        }
+      ]
+    },
+    {
+      "pooling": "cls",
+      "best_validation_f1_macro": 0.9106847018353201,
+      "test_loss": 0.2902003244977248,
+      "accuracy": 0.9011842105263158,
+      "precision_macro": 0.9015720106469404,
+      "recall_macro": 0.9011842105263158,
+      "f1_macro": 0.9008128511478348,
+      "elapsed_seconds": 47.89585219998844,
+      "confusion_matrix": [
+        [
+          1696,
+          56,
+          86,
+          62
+        ],
+        [
+          19,
+          1868,
+          6,
+          7
+        ],
+        [
+          78,
+          14,
+          1566,
+          242
+        ],
+        [
+          44,
+          13,
+          124,
+          1719
+        ]
+      ],
+      "classification_report": {
+        "World": {
+          "precision": 0.9232444202504083,
+          "recall": 0.8926315789473684,
+          "f1-score": 0.9076799571849077,
+          "support": 1900.0
+        },
+        "Sports": {
+          "precision": 0.9574577139928242,
+          "recall": 0.9831578947368421,
+          "f1-score": 0.970137626590496,
+          "support": 1900.0
+        },
+        "Business": {
+          "precision": 0.8787878787878788,
+          "recall": 0.8242105263157895,
+          "f1-score": 0.850624660510592,
+          "support": 1900.0
+        },
+        "Sci/Tech": {
+          "precision": 0.8467980295566503,
+          "recall": 0.9047368421052632,
+          "f1-score": 0.8748091603053435,
+          "support": 1900.0
+        },
+        "accuracy": 0.9011842105263158,
+        "macro avg": {
+          "precision": 0.9015720106469404,
+          "recall": 0.9011842105263158,
+          "f1-score": 0.9008128511478348,
+          "support": 7600.0
+        },
+        "weighted avg": {
+          "precision": 0.9015720106469405,
+          "recall": 0.9011842105263158,
+          "f1-score": 0.9008128511478349,
+          "support": 7600.0
+        }
+      },
+      "sample_errors": [
+        {
+          "text": "Card fraud unit nets 36,000 cards In its first two years, the UK's dedicated card fraud unit, has recovered 36,000 stolen cards and 171 arrests - and estimates it saved 65m.",
+          "target": "Sci/Tech",
+          "prediction": "Business"
+        },
+        {
+          "text": "Storage, servers bruise HP earnings update Earnings per share rise compared with a year ago, but company misses analysts' expectations by a long shot.",
+          "target": "Sci/Tech",
+          "prediction": "Business"
+        },
+        {
+          "text": "Rivals Try to Turn Tables on Charles Schwab By MICHAEL LIEDTKE     SAN FRANCISCO (AP) -- With its low prices and iconoclastic attitude, discount stock broker Charles Schwab Corp. (SCH) represented an annoying stone in Wall Street's wing-tipped shoes for decades...",
+          "target": "Sci/Tech",
+          "prediction": "Business"
+        },
+        {
+          "text": "Promoting a Shared Vision As Michael Kaleko kept running into people who were getting older and having more vision problems, he realized he could do something about it.",
+          "target": "Sci/Tech",
+          "prediction": "Sports"
+        },
+        {
+          "text": "India's Tata expands regional footprint via NatSteel buyout (AFP) AFP - India's Tata Iron and Steel Company Ltd. took a strategic step to expand its Asian footprint with the announcement it will buy the Asia-Pacific steel operations of Singapore's NatSteel Ltd.",
+          "target": "World",
+          "prediction": "Business"
+        },
+        {
+          "text": "Live: Olympics day four Richard Faulds and Stephen Parry are going for gold for Great Britain on day four in Athens.",
+          "target": "World",
+          "prediction": "Sports"
+        },
+        {
+          "text": "Intel to delay product aimed for high-definition TVs SAN FRANCISCO -- In the latest of a series of product delays, Intel Corp. has postponed the launch of a video display chip it had previously planned to introduce by year end, putting off a showdown with Texas Instruments Inc. in the fast-growing market for high-definition television displays.",
+          "target": "Business",
+          "prediction": "Sci/Tech"
+        },
+        {
+          "text": "U.S. Misses Cut in Olympic 100 Free ATHENS, Greece - Top American sprinters Jason Lezak and Ian Crocker missed the cut in the Olympic 100-meter freestyle preliminaries Tuesday, a stunning blow for a country that had always done well in the event.    Pieter van den Hoogenband of the Netherlands and Australian Ian Thorpe advanced to the evening semifinal a day after dueling teenager Michael Phelps in the 200 freestyle, won by Thorpe...",
+          "target": "World",
+          "prediction": "Sports"
+        },
+        {
+          "text": "Stocks Climb on Drop in Consumer Prices NEW YORK - Stocks rose for a second straight session Tuesday as a drop in consumer prices allowed investors to put aside worries about inflation, at least for the short term.    With gasoline prices falling to eight-month lows, the Consumer Price Index registered a small drop in July, giving consumers a respite from soaring energy prices...",
+          "target": "World",
+          "prediction": "Business"
+        },
+        {
+          "text": "Yahoo! Ups Ante for Small Businesses Web giant Yahoo! is gambling that price cuts on its domain name registration and Web hosting products will make it more competitive with discounters in the space -- which means that small businesses looking to move online get a sweeter deal through ...",
+          "target": "Business",
+          "prediction": "Sci/Tech"
+        },
+        {
+          "text": "IBM Buys Two Danish Services Firms IBM said Tuesday it has acquired a pair of Danish IT services firms as part of its effort to broaden its presence in Scandinavia. As a result of the moves, IBM will add about 3,700 IT staffers to its global head count. Financial terms of ...",
+          "target": "Sci/Tech",
+          "prediction": "Business"
+        },
+        {
+          "text": "Oil prices bubble to record high The price of oil has continued its sharp rise overnight, closing at a record high. The main contract in New York, light sweet crude for delivery next month, has closed at a record \\$US46.75 a barrel - up 70 cents on yesterday #39;s close. ",
+          "target": "World",
+          "prediction": "Business"
+        },
+        {
+          "text": "SUVs: Live And Let Die NEW YORK - The newly released traffic crash fatality data have something for everyone in the debate about the safety of sport utility vehicles. ",
+          "target": "Business",
+          "prediction": "Sci/Tech"
+        },
+        {
+          "text": "Google Lowers Its IPO Price Range SAN JOSE, Calif. - In a sign that Google Inc.'s initial public offering isn't as popular as expected, the company lowered its estimated price range to between \\$85 and \\$95 per share, down from the earlier prediction of \\$108 and \\$135 per share...",
+          "target": "World",
+          "prediction": "Business"
+        },
+        {
+          "text": "Future Doctors, Crossing Borders Students at the Mount Sinai School of Medicine learn that diet and culture shape health in East Harlem.",
+          "target": "World",
+          "prediction": "Sci/Tech"
+        },
+        {
+          "text": "Ross Stores Profit Plummets 40 Percent (AP) AP - Discount retailer Ross Stores Inc. Wednesday said its profit fell about 40 percent in the latest quarter due to problems with a new computer system that limited the company's ability to respond to changes in customer demand.",
+          "target": "Business",
+          "prediction": "Sci/Tech"
+        },
+        {
+          "text": "Stock Prices Climb Ahead of Google IPO NEW YORK - Investors shrugged off rising crude futures Wednesday to capture well-priced shares, sending the Nasdaq composite index up 1.6 percent ahead of Google Inc.'s much-anticipated initial public offering of stock.    In afternoon trading, the Dow Jones industrial average gained 67.10, or 0.7 percent, to 10,039.93...",
+          "target": "World",
+          "prediction": "Business"
+        },
+        {
+          "text": "Intuit Posts Wider Loss After Charge (Reuters) Reuters - Intuit Inc. (INTU.O), maker of\\the No. 1 U.S. tax presentation software TurboTax, on Wednesday\\posted a wider quarterly loss after taking a goodwill\\impairment charge during its seasonally weaker fourth quarter.",
+          "target": "Sci/Tech",
+          "prediction": "Business"
+        },
+        {
+          "text": "Hurricane center #39;s projection on Charley not far off, data show FORT LAUDERDALE, Fla. - (KRT) - Despite criticism that it should have better anticipated Hurricane Charley #39;s rapid intensification and quick turn, the National Hurricane Center #39;s forecast wasn #39;t that far off, a preliminary post-mortem shows. ",
+          "target": "Sci/Tech",
+          "prediction": "World"
+        },
+        {
+          "text": "Lloyds TSB cashes in on VoIP Lloyds TSB is gearing up to roll out one of the largest converged networks in Europe, a 500m 70,000 phone VoIP infrastructure linking all the bank #39;s branches and cash points.",
+          "target": "Sci/Tech",
+          "prediction": "Business"
+        },
+        {
+          "text": "Selling Houston Warts and All, Especially Warts Descriptions of urban afflictions and images of giant mosquitoes and cockroaches to convey a sense of how Houston is nevertheless beloved by many residents.",
+          "target": "Business",
+          "prediction": "Sci/Tech"
+        },
+        {
+          "text": "Scandal won #39;t go away ATHENS -- It was telling yesterday that the majority of the dozens of journalists who asked questions and attended a news conference into a Greek doping scandal were mostly Canadian. Question after question came from Canadians. We were all there, I think, ...",
+          "target": "Sports",
+          "prediction": "World"
+        },
+        {
+          "text": "Caterpillar snaps up another remanufacturer of engines PEORIA - Caterpillar Inc. said Wednesday it will acquire a South Carolina remanufacturer of engines and automatic transmissions, increasing its US employment base by 500 people. ",
+          "target": "Sci/Tech",
+          "prediction": "Business"
+        },
+        {
+          "text": "Ciena Posts a Loss, Forecasts Flat Sales &lt;p&gt;&lt;/p&gt;&lt;p&gt; By Deborah Cohen&lt;/p&gt;&lt;p&gt; CHICAGO (Reuters) - Telecommunications equipment makerCiena Corp. &lt;CIEN.O&gt; on Thursday reported a wider loss for thefiscal third quarter due to slack demand and forecast sales inthe current quarter would be little changed from the thirdquarter.&lt;/p&gt;",
+          "target": "Sci/Tech",
+          "prediction": "Business"
+        },
+        {
+          "text": "Ecuadorean Lawsuit Vs Texaco Boils Down to Science (Reuters) Reuters - After a decade\\of court battles, lawyers on Wednesday took a lawsuit by\\Ecuadorean Indians accusing U.S. oil firm ChevronTexaco Corp..\\of polluting the Amazon jungle into the field.",
+          "target": "Sci/Tech",
+          "prediction": "Business"
+        },
+        {
+          "text": "Producer sues for Rings profits Hollywood producer Saul Zaentz sues the producers of The Lord of the Rings for \\$20m in royalties.",
+          "target": "World",
+          "prediction": "Business"
+        },
+        {
+          "text": "Don #39;t expect Tiger to relinquish his top ranking without a fight They #39;re calling Ohio a  quot;battleground state, quot; one of the two or three places likely to decide November #39;s presidential election. On local TV, the Bush and Kerry ads air so frequently that it #39;s easy to forget it #39;s Bob Costas who actually runs the country. ",
+          "target": "Sports",
+          "prediction": "World"
+        },
+        {
+          "text": "Clicking on Profits The latest data from the US Department of Commerce further bolsters what we have all suspected: E-commerce sales are increasing. Not only might one suspect that consumer confidence has been bolstered since last year, there ...",
+          "target": "Business",
+          "prediction": "Sci/Tech"
+        },
+        {
+          "text": "Antidepressants to Reflect Suicide Risk  WASHINGTON (Reuters) - The U.S. Food and Drug  Administration plans to update antidepressant labels to reflect  studies that suggest a link between the drugs and suicide in  youths, but remains cautious about the strength of such ties,   according to documents released on Friday.",
+          "target": "Business",
+          "prediction": "World"
+        },
+        {
+          "text": "Crude Price Spike May Send Gas Higher (AP) AP - Amid soaring crude oil prices, gasoline costs have been dropping. But don't expect that to last, economists say.",
+          "target": "World",
+          "prediction": "Business"
+        }
+      ]
+    }
+  ]
+}
