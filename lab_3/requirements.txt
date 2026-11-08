@@ -1,0 +1,10 @@
+--extra-index-url https://download.pytorch.org/whl/cu130
+torch==2.12.1+cu130
+transformers==5.22.2
+datasets==5.1.0
+sentence-transformers[train]==6.2.0
+scikit-learn==1.9.1
+pandas==3.1.1
+matplotlib==3.11.2
+tqdm==4.70.1
+

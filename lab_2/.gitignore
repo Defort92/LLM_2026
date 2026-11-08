@@ -1,0 +1,7 @@
+.cache/
+.pip-cache/
+.tmp/
+artifacts/checkpoints/
+__pycache__/
+*.pyc
+

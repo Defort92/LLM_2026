@@ -1,0 +1,111 @@
+{
+  "experiment": {
+    "seed": 42,
+    "device": "cuda",
+    "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+    "torch": "2.12.1+cu130",
+    "train_limit": 6000,
+    "validation_generation_limit": 200,
+    "validation_loss_limit": 500,
+    "epochs": 1,
+    "batch_size": 8,
+    "gradient_accumulation": 2,
+    "effective_batch_size": 16,
+    "learning_rate": 5e-05,
+    "max_input_length": 64,
+    "max_target_length": 48,
+    "generation_length": 40,
+    "generation": "greedy decoding; do_sample=False; num_beams=1",
+    "mixed_precision": "bfloat16"
+  },
+  "data": {
+    "train": {
+      "split": "train",
+      "dialogues": 11118,
+      "all_adjacent_pairs": 76052,
+      "selected_pairs": 6000,
+      "seed": 42
+    },
+    "validation": {
+      "split": "validation",
+      "dialogues": 1000,
+      "all_adjacent_pairs": 7069,
+      "selected_pairs": 500,
+      "seed": 42
+    }
+  },
+  "decoder-only": {
+    "architecture": "decoder-only",
+    "model": "distilbert/distilgpt2",
+    "parameters": {
+      "total": 81912576,
+      "trainable": 81912576
+    },
+    "zero_shot": {
+      "bleu": 0.1164,
+      "meteor": 0.1004,
+      "examples": 200
+    },
+    "fine_tuned": {
+      "bleu": 0.6999,
+      "meteor": 0.1306,
+      "examples": 200
+    },
+    "improvement": {
+      "bleu_absolute": 0.5835,
+      "meteor_absolute": 0.0302
+    },
+    "generation_seconds": {
+      "zero_shot": 9.33,
+      "fine_tuned": 2.97
+    },
+    "training": {
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 3.2411010173161823,
+          "validation_loss": 3.1036540137396917
+        }
+      ],
+      "seconds": 63.54,
+      "optimizer_steps": 375
+    }
+  },
+  "encoder-decoder": {
+    "architecture": "encoder-decoder",
+    "model": "google/flan-t5-small",
+    "parameters": {
+      "total": 76961152,
+      "trainable": 76961152
+    },
+    "zero_shot": {
+      "bleu": 0.6072,
+      "meteor": 0.1171,
+      "examples": 200
+    },
+    "fine_tuned": {
+      "bleu": 0.481,
+      "meteor": 0.1251,
+      "examples": 200
+    },
+    "improvement": {
+      "bleu_absolute": -0.1262,
+      "meteor_absolute": 0.008
+    },
+    "generation_seconds": {
+      "zero_shot": 8.94,
+      "fine_tuned": 7.95
+    },
+    "training": {
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 2.7964902879397076,
+          "validation_loss": 2.566225074586414
+        }
+      ],
+      "seconds": 140.84,
+      "optimizer_steps": 375
+    }
+  }
+}
