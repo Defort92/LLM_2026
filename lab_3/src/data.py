@@ -37,6 +37,8 @@ def build_training_dataset(
 
     dataset = Dataset.from_dict(
         {
+            # E5 использует разные префиксы, чтобы отличать поисковый запрос
+            # от документа даже при одинаковой структуре входного текста.
             "anchor": [f"query: {row.query}" for row in selected],
             "positive": [f"passage: {row.document}" for row in selected],
         }
@@ -54,11 +56,11 @@ def build_retrieval_test_set(
     rows: list[SearchExample],
     positive_limit: int,
 ) -> tuple[list[str], list[str], dict[str, int]]:
-    """Keep one question for each unique positive document.
+    """Оставляет по одному вопросу для каждого уникального документа.
 
-    The provided notebook uses the first 1000 positive SberQuAD examples and
-    removes repeated contexts.  Keeping the first query for every context gives
-    one known relevant document per query and makes exact ranking unambiguous.
+    Из первых положительных примеров SberQuAD удаляются повторяющиеся контексты.
+    Тогда у каждого вопроса есть ровно один известный релевантный документ,
+    поэтому его позицию в ранжировании можно определить однозначно.
     """
     positives = positive_examples(rows)[:positive_limit]
     seen_documents: set[str] = set()
@@ -93,4 +95,3 @@ def build_pairwise_test_set(
         [row.document for row in selected],
         [int(row.label) for row in selected],
     )
-

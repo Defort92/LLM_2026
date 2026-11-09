@@ -38,7 +38,7 @@ DEFAULT_DATA_DIR = PROJECT_ROOT / "labs_data" / "lab3(base)" / "lab3"
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Laboratory work 3: fine-tune multilingual E5 for QA retrieval")
+    parser = argparse.ArgumentParser(description="Лабораторная №3: дообучение multilingual E5 для поиска")
     parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR)
     parser.add_argument("--output-dir", type=Path, default=LAB_ROOT / "artifacts")
     parser.add_argument("--train-limit", type=int, default=12000)
@@ -82,8 +82,8 @@ def train_model(
         num_train_epochs=args.epochs,
         per_device_train_batch_size=args.batch_size,
         learning_rate=args.learning_rate,
-        # In Transformers v5 a float in warmup_steps is interpreted as a
-        # fraction of all training steps; 0.1 means a 10% warmup.
+        # В Transformers v5 дробное warmup_steps трактуется как доля всех шагов:
+        # 0.1 означает линейный разогрев learning rate на первых 10% обучения.
         warmup_steps=0.1,
         bf16=use_bfloat16,
         fp16=torch.cuda.is_available() and not use_bfloat16,
@@ -99,6 +99,8 @@ def train_model(
         data_seed=args.seed,
         dataloader_num_workers=0,
     )
+    # Остальные документы текущего batch становятся отрицательными примерами.
+    # Это даёт много сравнений без хранения отдельных негативных пар в датасете.
     loss = MultipleNegativesRankingLoss(model, scale=1.0 / args.temperature)
     trainer = SentenceTransformerTrainer(
         model=model,
@@ -160,8 +162,9 @@ def create_training_plot(history: list[dict[str, Any]], output_dir: Path) -> Non
     plt.close(fig)
 
 
-def main() -> None:
-    args = parse_args()
+def run_experiment(args: argparse.Namespace) -> None:
+    """Запускает оценку, дообучение и повторную оценку модели."""
+
     set_seed(args.seed)
     args.output_dir.mkdir(parents=True, exist_ok=True)
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -228,11 +231,11 @@ def main() -> None:
             "max_seq_length": args.max_seq_length,
             "query_prefix": "query: ",
             "passage_prefix": "passage: ",
-            "loss": "MultipleNegativesRankingLoss with in-batch negatives",
+            "loss": "MultipleNegativesRankingLoss с негативами внутри batch",
             "mixed_precision": "bfloat16" if device == "cuda" and torch.cuda.is_bf16_supported() else "float16" if device == "cuda" else "float32",
         },
         "data": {
-            "source": "SberQuAD prepared pickle files supplied with the laboratory",
+            "source": "Подготовленные pickle-файлы SberQuAD из материалов лабораторной",
             "train": train_metadata,
             "retrieval_test": retrieval_metadata,
             "pairwise_test_pairs": len(pair_labels),
@@ -257,7 +260,11 @@ def main() -> None:
         json.dump(results, file, ensure_ascii=False, indent=2)
     create_metric_plot(results, args.output_dir)
     create_training_plot(history, args.output_dir)
-    print(f"\nDone. Results: {args.output_dir / 'results.json'}", flush=True)
+    print(f"\nГотово. Результаты: {args.output_dir / 'results.json'}", flush=True)
+
+
+def main() -> None:
+    run_experiment(parse_args())
 
 
 if __name__ == "__main__":

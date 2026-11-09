@@ -27,10 +27,10 @@ def _indices_by_label(dataset: Dataset) -> dict[int, list[int]]:
 
 
 def build_stratified_splits(seed: int, sizes: DatasetSizes) -> DatasetDict:
-    """Load AG News and create balanced train/validation subsets.
+    """Загружает AG News и создаёт сбалансированные train/validation выборки.
 
-    The official test split is kept intact. Validation examples are taken only
-    from the official training split, so the test set remains unseen.
+    Официальная тестовая выборка не изменяется. Валидационные примеры берутся
+    только из train, поэтому test остаётся независимым от обучения и настройки.
     """
 
     raw = load_dataset("fancyzhx/ag_news")
@@ -46,8 +46,8 @@ def build_stratified_splits(seed: int, sizes: DatasetSizes) -> DatasetDict:
         label_indices = grouped[label]
         if len(label_indices) < requested:
             raise ValueError(
-                f"Class {label} has {len(label_indices)} examples, "
-                f"but {requested} were requested."
+                f"В классе {label} находится {len(label_indices)} примеров, "
+                f"но запрошено {requested}."
             )
         rng.shuffle(label_indices)
         train_indices.extend(label_indices[: sizes.train_per_class])

@@ -24,21 +24,20 @@ def _clean(text: str) -> str:
 
 
 def load_dialogue_pairs(split: str, limit: int | None, seed: int) -> tuple[list[DialoguePair], dict[str, Any]]:
-    """Convert each dialogue into adjacent message-response pairs.
+    """Преобразует диалоги в соседние пары «сообщение — ответ».
 
-    DailyDialog contains ordered utterances but no explicit speaker names.  Because
-    speakers alternate, every adjacent transition can be treated as one training
-    example: utterance[i] is the incoming message and utterance[i + 1] is the reply.
+    В DailyDialog реплики упорядочены, но имена говорящих не указаны. Поскольку
+    собеседники чередуются, соседние реплики можно считать одной обучающей парой:
+    utterance[i] — входное сообщение, utterance[i + 1] — ответ на него.
     """
     raw_split = load_dataset(DATASET_NAME, split=split)
     pairs: list[DialoguePair] = []
 
     for row in raw_split:
-        # Parquet versions use ``dialog``; older DailyDialog scripts used
-        # ``utterances``. Supporting both keeps preprocessing transparent.
+        # В parquet используется dialog, а в старых версиях датасета — utterances.
         dialogue = row.get("dialog", row.get("utterances"))
         if dialogue is None:
-            raise KeyError("Expected a 'dialog' or 'utterances' column in DailyDialog")
+            raise KeyError("В DailyDialog не найдена колонка 'dialog' или 'utterances'")
         utterances = [_clean(value) for value in dialogue]
         for index in range(len(utterances) - 1):
             message, response = utterances[index], utterances[index + 1]
@@ -105,6 +104,8 @@ class DecoderOnlyDataset(Dataset):
         response_ids.append(self.eos_token_id)
 
         input_ids = prompt_ids + response_ids
+        # -100 отключает loss для промпта: decoder-only модель должна учиться
+        # предсказывать ответ, а не повторять входное сообщение пользователя.
         labels = [-100] * len(prompt_ids) + response_ids.copy()
         attention_mask = [1] * len(input_ids)
         padding_length = self.max_length - len(input_ids)
@@ -153,6 +154,8 @@ class EncoderDecoderDataset(Dataset):
             return_tensors="pt",
         )
         labels = target["input_ids"].squeeze(0)
+        # Padding не должен участвовать в cross-entropy, поэтому заменяем его
+        # на ignore_index=-100, который ожидают модели Transformers.
         labels[labels == self.tokenizer.pad_token_id] = -100
 
         return {

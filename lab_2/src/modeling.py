@@ -76,8 +76,8 @@ def train_model(
     total_optimizer_steps = optimizer_steps_per_epoch * epochs
     warmup_steps = int(total_optimizer_steps * warmup_ratio)
     scheduler = get_linear_schedule_with_warmup(optimizer, warmup_steps, total_optimizer_steps)
-    # T5-family models can overflow in float16. Ampere/Ada GPUs support the
-    # wider exponent range of bfloat16 and do not need dynamic loss scaling.
+    # У T5 возможны переполнения во float16. На современных GPU используем
+    # bfloat16: у него шире диапазон значений и не нужен динамический GradScaler.
     use_bfloat16 = device.type == "cuda" and torch.cuda.is_bf16_supported()
     scaler = torch.amp.GradScaler("cuda", enabled=device.type == "cuda" and not use_bfloat16)
 
@@ -98,11 +98,13 @@ def train_model(
                 scaled_loss = loss / gradient_accumulation_steps
             if not torch.isfinite(loss):
                 raise FloatingPointError(
-                    f"Non-finite loss at epoch={epoch}, batch={batch_index}: {float(loss.detach().cpu())}"
+                    f"Некорректный loss на эпохе {epoch}, batch={batch_index}: {float(loss.detach().cpu())}"
                 )
             scaler.scale(scaled_loss).backward()
             running_loss += float(loss.detach().cpu())
 
+            # Градиенты копятся несколько batch, имитируя больший batch без
+            # соответствующего увеличения потребления видеопамяти.
             should_step = batch_index % gradient_accumulation_steps == 0 or batch_index == len(train_loader)
             if should_step:
                 scaler.unscale_(optimizer)
@@ -110,8 +112,8 @@ def train_model(
                 previous_scale = scaler.get_scale()
                 scaler.step(optimizer)
                 scaler.update()
-                # When fp16 overflows, GradScaler skips optimizer.step().  The
-                # scheduler must skip the same step to stay synchronized.
+                # При переполнении fp16 GradScaler пропускает optimizer.step().
+                # Scheduler тоже должен пропустить этот шаг, чтобы не рассинхронизироваться.
                 if scaler.get_scale() >= previous_scale:
                     scheduler.step()
                 optimizer.zero_grad(set_to_none=True)

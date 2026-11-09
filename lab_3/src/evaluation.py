@@ -32,11 +32,13 @@ def evaluate_retrieval(
 ) -> tuple[dict[str, float | int], np.ndarray, np.ndarray]:
     query_embeddings = _encode(model, queries, "query: ", batch_size, "queries")
     document_embeddings = _encode(model, documents, "passage: ", batch_size, "documents")
+    # Векторы нормализованы, поэтому скалярное произведение равно cosine similarity.
+    # Получаем оценку каждой пары «вопрос — документ» одной матричной операцией.
     scores = query_embeddings @ document_embeddings.T
 
     top_k = min(10, len(documents))
-    # argpartition finds the top candidates without sorting the entire corpus;
-    # the selected candidates are then sorted by their exact cosine score.
+    # argpartition быстро выбирает десять кандидатов без полной сортировки корпуса;
+    # затем сортируем только их, чтобы получить точный порядок внутри top-10.
     candidate_ids = np.argpartition(-scores, kth=top_k - 1, axis=1)[:, :top_k]
     candidate_scores = np.take_along_axis(scores, candidate_ids, axis=1)
     order = np.argsort(-candidate_scores, axis=1)
@@ -51,8 +53,8 @@ def evaluate_retrieval(
     recall_at_5 = float(np.mean(ranks <= 5))
     recall_at_10 = float(np.mean(ranks <= 10))
     mrr_at_10 = float(np.mean(np.where(ranks <= 10, 1.0 / ranks, 0.0)))
-    # There is one relevant document for each query, so AP@10 equals reciprocal
-    # rank when the positive is in the first ten positions.
+    # Релевантный документ только один, поэтому AP@10 совпадает с reciprocal rank,
+    # если этот документ находится в первой десятке.
     map_at_10 = mrr_at_10
     ndcg_at_10 = float(np.mean(np.where(ranks <= 10, 1.0 / np.log2(ranks + 1.0), 0.0)))
 
@@ -103,6 +105,8 @@ def ranking_examples(
     fine_tuned_ids: np.ndarray,
     count_each: int = 5,
 ) -> list[dict[str, Any]]:
+    # Ранг inf означает, что документ не попал в top-10; для сравнения считаем
+    # его условной позицией 11, следующей сразу после наблюдаемой выдачи.
     baseline_numeric = np.where(np.isfinite(baseline_ranks), baseline_ranks, 11.0)
     fine_tuned_numeric = np.where(np.isfinite(fine_tuned_ranks), fine_tuned_ranks, 11.0)
     improvement = baseline_numeric - fine_tuned_numeric
@@ -124,4 +128,3 @@ def ranking_examples(
                 }
             )
     return rows
-

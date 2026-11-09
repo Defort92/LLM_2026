@@ -11,7 +11,7 @@ PoolingType = Literal["mean", "cls"]
 
 
 class TextClassifier(nn.Module):
-    """Encoder model with a selectable token-pooling strategy."""
+    """Классификатор текста с выбираемой стратегией объединения токенов."""
 
     def __init__(
         self,
@@ -22,7 +22,7 @@ class TextClassifier(nn.Module):
     ) -> None:
         super().__init__()
         if pooling not in {"mean", "cls"}:
-            raise ValueError(f"Unsupported pooling: {pooling}")
+            raise ValueError(f"Неизвестная стратегия pooling: {pooling}")
 
         self.encoder = AutoModel.from_pretrained(model_name)
         self.pooling = pooling
@@ -37,6 +37,8 @@ class TextClassifier(nn.Module):
         if self.pooling == "cls":
             return token_embeddings[:, 0]
 
+        # Маска исключает padding-токены из среднего, иначе короткие тексты
+        # получали бы вектор, зависящий от количества добавленного padding.
         expanded_mask = attention_mask.unsqueeze(-1).to(token_embeddings.dtype)
         embedding_sum = (token_embeddings * expanded_mask).sum(dim=1)
         valid_token_count = expanded_mask.sum(dim=1).clamp(min=1e-9)
@@ -56,4 +58,3 @@ class TextClassifier(nn.Module):
             attention_mask=attention_mask,
         )
         return self.classifier(self.dropout(text_vector))
-

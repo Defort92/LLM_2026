@@ -9,14 +9,14 @@ from sacrebleu import corpus_bleu
 
 def calculate_generation_metrics(predictions: list[str], references: list[str]) -> dict[str, float]:
     if len(predictions) != len(references):
-        raise ValueError("Predictions and references must have the same length")
+        raise ValueError("Количество предсказаний и эталонных ответов должно совпадать")
     if not predictions:
-        raise ValueError("At least one prediction is required")
+        raise ValueError("Нужно передать хотя бы одно предсказание")
 
     normalized_predictions = [prediction.strip() for prediction in predictions]
     normalized_references = [reference.strip() for reference in references]
-    # DailyDialog is already whitespace-tokenized around punctuation.  ``force``
-    # suppresses SacreBLEU's detokenization hint without changing the score.
+    # В DailyDialog пробелы возле пунктуации уже расставлены. force отключает
+    # предупреждение SacreBLEU, но не меняет значение метрики.
     bleu = corpus_bleu(normalized_predictions, [normalized_references], force=True).score
 
     meteor_values: list[float] = []

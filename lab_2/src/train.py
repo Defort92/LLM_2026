@@ -39,7 +39,7 @@ ENCODER_DECODER_MODEL = "google/flan-t5-small"
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Laboratory work 2: fine-tune two dialogue architectures")
+    parser = argparse.ArgumentParser(description="Лабораторная №2: дообучение двух диалоговых архитектур")
     parser.add_argument("--train-limit", type=int, default=6000)
     parser.add_argument("--validation-limit", type=int, default=200)
     parser.add_argument("--validation-loss-limit", type=int, default=500)
@@ -70,7 +70,7 @@ def ensure_wordnet() -> None:
         nltk.data.find("corpora/wordnet.zip")
     except LookupError:
         if not nltk.download("wordnet", download_dir=target, quiet=False):
-            raise RuntimeError("Could not download the NLTK WordNet corpus required for METEOR")
+            raise RuntimeError("Не удалось загрузить WordNet, необходимый для METEOR")
 
 
 def generate_decoder(
@@ -99,6 +99,8 @@ def generate_decoder(
         pad_token_id=tokenizer.pad_token_id,
         eos_token_id=tokenizer.eos_token_id,
     )
+    # У decoder-only результата сначала идёт исходный промпт. Оставляем только
+    # новые токены, сгенерированные после него.
     continuation = generated[:, encoded["input_ids"].shape[1] :]
     return tokenizer.batch_decode(continuation, skip_special_tokens=True)
 
@@ -293,8 +295,9 @@ def create_plots(results: dict[str, Any], output_dir: Path) -> None:
     plt.close(fig)
 
 
-def main() -> None:
-    args = parse_args()
+def run_experiment(args: argparse.Namespace) -> None:
+    """Запускает сравнение архитектур с явно переданными параметрами."""
+
     set_seed(args.seed)
     ensure_wordnet()
     args.output_dir.mkdir(parents=True, exist_ok=True)
@@ -358,7 +361,11 @@ def main() -> None:
 
     create_plots(results, args.output_dir)
     save_partial_results(results, args.output_dir)
-    print(f"\nDone. Results: {args.output_dir / 'results.json'}", flush=True)
+    print(f"\nГотово. Результаты: {args.output_dir / 'results.json'}", flush=True)
+
+
+def main() -> None:
+    run_experiment(parse_args())
 
 
 if __name__ == "__main__":

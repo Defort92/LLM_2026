@@ -8,4 +8,4 @@ nltk==3.9.2
 pandas==3.1.1
 matplotlib==3.11.2
 tqdm==4.70.1
-
+ipykernel>=6.29,<8

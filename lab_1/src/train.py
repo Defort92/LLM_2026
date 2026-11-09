@@ -53,7 +53,7 @@ class ExperimentConfig:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Compare mean pooling and CLS pooling on AG News."
+        description="Сравнение mean pooling и CLS pooling на AG News."
     )
     parser.add_argument("--epochs", type=int, default=2)
     parser.add_argument("--batch-size", type=int, default=32)
@@ -65,7 +65,7 @@ def parse_args() -> argparse.Namespace:
         "--pooling",
         choices=["mean", "cls", "both"],
         default="both",
-        help="Run one pooling strategy or both strategies.",
+        help="Запустить одну стратегию pooling или сравнить обе.",
     )
     return parser.parse_args()
 
@@ -87,6 +87,7 @@ def linear_warmup_decay(
     warmup_steps = max(1, int(total_steps * warmup_ratio))
 
     def lr_lambda(current_step: int) -> float:
+        # Сначала learning rate линейно растёт, затем плавно уменьшается до нуля.
         if current_step < warmup_steps:
             return float(current_step + 1) / float(warmup_steps)
         remaining_steps = max(1, total_steps - warmup_steps)
@@ -180,6 +181,8 @@ def train_one_pooling(
     )
     loss_fn = nn.CrossEntropyLoss()
     use_amp = device.type == "cuda"
+    # Mixed precision уменьшает расход видеопамяти; GradScaler защищает fp16
+    # градиенты от численного обнуления.
     scaler = torch.amp.GradScaler("cuda", enabled=use_amp)
 
     best_validation_f1 = -1.0
@@ -243,6 +246,7 @@ def train_one_pooling(
         )
 
         if validation_metrics.f1_macro > best_validation_f1:
+            # На test оценивается не последняя эпоха, а лучшая по validation F1.
             best_validation_f1 = validation_metrics.f1_macro
             torch.save(
                 {
@@ -324,8 +328,8 @@ def save_plots(results: list[dict], history: list[dict]) -> None:
         hue="Pooling",
     )
     chart.set_ylim(0, 1)
-    chart.set_title("AG News: comparison of pooling strategies")
-    chart.set_ylabel("Score")
+    chart.set_title("AG News: сравнение стратегий pooling")
+    chart.set_ylabel("Значение метрики")
     for container in chart.containers:
         chart.bar_label(container, fmt="%.3f", padding=3, fontsize=9)
     plt.tight_layout()
@@ -346,8 +350,8 @@ def save_plots(results: list[dict], history: list[dict]) -> None:
     plt.ylim(lower_bound, upper_bound)
     plt.xticks(sorted(history_df["epoch"].unique()))
     plt.ylabel("Macro F1")
-    plt.xlabel("Epoch")
-    plt.title("Validation macro F1 by epoch")
+    plt.xlabel("Эпоха")
+    plt.title("Macro F1 на validation по эпохам")
     plt.tight_layout()
     plt.savefig(plots_dir / "validation_f1_history.png", dpi=180)
     plt.close()
@@ -363,9 +367,9 @@ def save_plots(results: list[dict], history: list[dict]) -> None:
             xticklabels=LABEL_NAMES,
             yticklabels=LABEL_NAMES,
         )
-        plt.xlabel("Predicted class")
-        plt.ylabel("True class")
-        plt.title(f"Confusion matrix: {result['pooling'].upper()} pooling")
+        plt.xlabel("Предсказанный класс")
+        plt.ylabel("Истинный класс")
+        plt.title(f"Матрица ошибок: {result['pooling'].upper()} pooling")
         plt.tight_layout()
         plt.savefig(
             plots_dir / f"confusion_matrix_{result['pooling']}.png",
@@ -374,8 +378,9 @@ def save_plots(results: list[dict], history: list[dict]) -> None:
         plt.close()
 
 
-def main() -> None:
-    args = parse_args()
+def run_experiment(args: argparse.Namespace) -> None:
+    """Запускает эксперимент с явно переданными параметрами."""
+
     config = ExperimentConfig(
         seed=args.seed,
         train_per_class=args.train_per_class,
@@ -471,9 +476,13 @@ def main() -> None:
     )
     save_plots(results, complete_history)
 
-    print("\nFinal test metrics")
+    print("\nИтоговые метрики на test")
     print(pd.DataFrame(results)[comparison_columns].to_string(index=False))
-    print(f"\nArtifacts saved to: {ARTIFACTS_DIR}")
+    print(f"\nАртефакты сохранены в: {ARTIFACTS_DIR}")
+
+
+def main() -> None:
+    run_experiment(parse_args())
 
 
 if __name__ == "__main__":
